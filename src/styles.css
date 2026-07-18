@@ -98,3 +98,11 @@ html, body {
   backdrop-filter: blur(14px);
   border-radius: 1.25rem;
 }
+
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+

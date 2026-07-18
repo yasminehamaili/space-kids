@@ -52,26 +52,29 @@ function Home() {
 
           {planets.map((p) => {
             const maxR = 540;
-            const scale = 0.9;
-            const r = (p.orbitRadius / maxR) * (Math.min(window.innerWidth, 1200) * 0.42) * scale;
+            const containerSize = Math.min(
+              typeof window !== "undefined" ? window.innerWidth : 1200,
+              1200,
+            );
+            const r = (p.orbitRadius / maxR) * (containerSize * 0.42) * 0.9;
             return (
               <div
                 key={p.id}
-                className="pointer-events-none absolute"
+                className="pointer-events-none absolute left-1/2 top-1/2"
                 style={{
                   width: r * 2,
                   height: r * 2,
+                  marginLeft: -r,
+                  marginTop: -r,
                   borderRadius: "50%",
                   border: "1px dashed rgba(255,255,255,0.12)",
                 }}
               >
                 <div
-                  className="absolute left-1/2 top-1/2 origin-center"
+                  className="absolute inset-0"
                   style={{
-                    width: r * 2,
-                    height: r * 2,
-                    transform: "translate(-50%, -50%)",
                     animation: `orbit-spin ${p.orbitDuration}s linear infinite`,
+                    transformOrigin: "50% 50%",
                   }}
                 >
                   <div
@@ -79,13 +82,19 @@ function Home() {
                     style={{
                       top: 0,
                       left: "50%",
-                      transform: "translate(-50%, -50%)",
+                      width: p.size,
+                      height: p.size,
+                      marginLeft: -p.size / 2,
+                      marginTop: -p.size / 2,
                     }}
                   >
                     <div
                       className="pointer-events-auto cursor-pointer transition-transform hover:scale-125"
                       style={{
+                        width: p.size,
+                        height: p.size,
                         animation: `counter-spin ${p.orbitDuration}s linear infinite`,
+                        transformOrigin: "50% 50%",
                       }}
                       onClick={(e) => handlePlanetClick(e, p.id)}
                       title={p.name}
@@ -101,6 +110,7 @@ function Home() {
               </div>
             );
           })}
+
         </div>
       </div>
 

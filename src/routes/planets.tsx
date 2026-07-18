@@ -1,18 +1,17 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ChevronDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { planets } from "@/lib/planets";
 import { PlanetSphere } from "@/components/Planet3D";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export const Route = createFileRoute("/planets")({
   head: () => ({
     meta: [
       { title: "Meet the Planets — Space Kids" },
-      { name: "description", content: "Scroll through all 8 planets of the Solar System." },
+      {
+        name: "description",
+        content: "Swipe through all 8 planets of the Solar System.",
+      },
     ],
   }),
   component: PlanetsPage,
@@ -20,98 +19,179 @@ export const Route = createFileRoute("/planets")({
 
 function PlanetsPage() {
   const navigate = useNavigate();
-  const listRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
 
+  // Track which slide is centered via IntersectionObserver
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      cardsRef.current.forEach((card) => {
-        if (!card) return;
-        gsap.from(card, {
-          opacity: 0,
-          y: 60,
-          scale: 0.9,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: card,
-            start: "top 90%",
-            toggleActions: "play none none reverse",
-          },
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+            const idx = Number(
+              (entry.target as HTMLElement).dataset.index ?? 0,
+            );
+            setActiveIndex(idx);
+          }
         });
-      });
-    });
-    return () => ctx.revert();
+      },
+      { root: scroller, threshold: [0.6, 0.9] },
+    );
+    slideRefs.current.forEach((el) => el && observer.observe(el));
+    return () => observer.disconnect();
   }, []);
 
-  const scrollNext = () => {
-    const list = listRef.current;
-    if (!list) return;
-    list.scrollBy({ top: window.innerHeight * 0.7, behavior: "smooth" });
+  const scrollToIndex = (i: number) => {
+    const target = slideRefs.current[i];
+    if (target) target.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
   };
 
-  const handleClick = (e: React.MouseEvent, id: string) => {
+  const go = (dir: -1 | 1) => {
+    const next = Math.min(Math.max(activeIndex + dir, 0), planets.length - 1);
+    scrollToIndex(next);
+  };
+
+  const handlePlanetClick = (e: React.MouseEvent, id: string, isActive: boolean) => {
+    if (!isActive) {
+      const idx = planets.findIndex((p) => p.id === id);
+      scrollToIndex(idx);
+      return;
+    }
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     sessionStorage.setItem(
       "planet-origin",
       JSON.stringify({
         x: rect.left + rect.width / 2,
         y: rect.top + rect.height / 2,
-        size: 200,
+        size: rect.width,
       }),
     );
     navigate({ to: "/planet/$id", params: { id } });
   };
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") go(1);
+      if (e.key === "ArrowLeft") go(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeIndex]);
+
   return (
-    <div className="relative mx-auto max-w-5xl px-4">
-      <h1 className="mb-6 text-center font-display text-4xl font-bold text-white md:text-5xl">
+    <div className="relative">
+      <h1 className="mb-2 text-center font-display text-4xl font-bold text-white md:text-5xl">
         🪐 Meet the Planets
       </h1>
-      <p className="mb-8 text-center text-white/70">Tap a planet to learn more!</p>
+      <p className="mb-6 text-center text-white/70">
+        Swipe or use the arrows • Tap the planet to explore!
+      </p>
 
-      <div ref={listRef} className="flex flex-col gap-6 pb-24">
-        {planets.map((p, i) => (
-          <div
-            key={p.id}
-            ref={(el) => {
-              cardsRef.current[i] = el;
-            }}
-            onClick={(e) => handleClick(e, p.id)}
-            className="glass-panel flex cursor-pointer items-center gap-6 p-6 transition hover:scale-[1.02] hover:border-white/30"
-          >
-            <div className="shrink-0">
-              <PlanetSphere planet={p} size={100} withRing={p.id === "saturn"} />
-            </div>
-            <div className="flex-1">
-              <div className="text-xs uppercase tracking-widest text-white/50">
-                Planet #{p.order}
+      <div className="relative">
+        {/* Left arrow */}
+        <button
+          onClick={() => go(-1)}
+          aria-label="Previous planet"
+          disabled={activeIndex === 0}
+          className="absolute left-2 top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition hover:scale-110 hover:bg-white/20 disabled:opacity-30 md:left-6 md:h-16 md:w-16"
+        >
+          <ChevronLeft size={32} />
+        </button>
+
+        {/* Right arrow */}
+        <button
+          onClick={() => go(1)}
+          aria-label="Next planet"
+          disabled={activeIndex === planets.length - 1}
+          className="absolute right-2 top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition hover:scale-110 hover:bg-white/20 disabled:opacity-30 md:right-6 md:h-16 md:w-16"
+        >
+          <ChevronRight size={32} />
+        </button>
+
+        <div
+          ref={scrollerRef}
+          className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth scrollbar-hide"
+          style={{ scrollbarWidth: "none" }}
+        >
+          {planets.map((p, i) => {
+            const isActive = i === activeIndex;
+            return (
+              <div
+                key={p.id}
+                data-index={i}
+                ref={(el) => {
+                  slideRefs.current[i] = el;
+                }}
+                className="flex min-w-full shrink-0 snap-center items-center justify-center px-6 py-6"
+                style={{ minHeight: "70vh" }}
+              >
+                <div
+                  className="flex flex-col items-center text-center transition-all duration-500"
+                  style={{
+                    opacity: isActive ? 1 : 0.25,
+                    transform: `scale(${isActive ? 1 : 0.75})`,
+                    filter: isActive ? "none" : "blur(2px)",
+                  }}
+                >
+                  <div className="text-sm uppercase tracking-[0.3em] text-white/60">
+                    Planet #{p.order}
+                  </div>
+                  <h2 className="mb-6 mt-2 font-display text-5xl font-bold text-white drop-shadow-lg md:text-7xl">
+                    {p.name}
+                  </h2>
+                  <div
+                    onClick={(e) => handlePlanetClick(e, p.id, isActive)}
+                    className="cursor-pointer transition-transform hover:scale-105"
+                    style={{
+                      animation: isActive
+                        ? "float-bob 4s ease-in-out infinite"
+                        : "none",
+                    }}
+                  >
+                    <PlanetSphere
+                      planet={p}
+                      size={Math.min(320, typeof window !== "undefined" ? window.innerWidth * 0.6 : 320)}
+                      withRing={p.id === "saturn"}
+                    />
+                  </div>
+                  <p className="mx-auto mt-8 max-w-xl text-lg text-white/80 md:text-xl">
+                    {p.summary}
+                  </p>
+                  {isActive && (
+                    <button
+                      onClick={(e) => handlePlanetClick(e, p.id, true)}
+                      className="mt-6 rounded-full bg-primary px-8 py-3 font-display text-lg font-bold text-primary-foreground shadow-lg transition hover:scale-105"
+                    >
+                      Explore {p.name} →
+                    </button>
+                  )}
+                </div>
               </div>
-              <h2 className="font-display text-3xl font-bold text-white">
-                {p.name}
-              </h2>
-              <p className="mt-1 text-white/70">{p.summary}</p>
-            </div>
-            <div
-              className="hidden shrink-0 rounded-full px-4 py-2 text-sm font-bold md:block"
-              style={{
-                background: p.accent,
-                color: "#1a0a2a",
-              }}
-            >
-              Explore →
-            </div>
-          </div>
-        ))}
-      </div>
+            );
+          })}
+        </div>
 
-      <button
-        onClick={scrollNext}
-        aria-label="Scroll to next planet"
-        className="fixed bottom-8 right-8 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-2xl transition hover:scale-110"
-      >
-        <ChevronDown size={28} />
-      </button>
+        {/* Dots */}
+        <div className="mt-4 flex justify-center gap-2">
+          {planets.map((p, i) => (
+            <button
+              key={p.id}
+              onClick={() => scrollToIndex(i)}
+              aria-label={`Go to ${p.name}`}
+              className="h-2.5 rounded-full transition-all"
+              style={{
+                width: i === activeIndex ? 28 : 10,
+                background:
+                  i === activeIndex ? p.accent : "rgba(255,255,255,0.3)",
+              }}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
