@@ -105,7 +105,7 @@ function PlanetDetail() {
               Fun facts ✨
             </div>
             <ul className="space-y-1 text-white/90">
-              {planet.facts.funFacts.map((f, i) => (
+              {planet.facts.funFacts.map((f: string, i: number) => (
                 <li key={i}>• {f}</li>
               ))}
             </ul>
