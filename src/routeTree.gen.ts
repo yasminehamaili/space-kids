@@ -9,38 +9,75 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PlanetsRouteImport } from './routes/planets'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PlanetIdIndexRouteImport } from './routes/planet.$id.index'
+import { Route as PlanetIdResourcesRouteImport } from './routes/planet.$id.resources'
 
+const PlanetsRoute = PlanetsRouteImport.update({
+  id: '/planets',
+  path: '/planets',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlanetIdIndexRoute = PlanetIdIndexRouteImport.update({
+  id: '/planet/$id/',
+  path: '/planet/$id/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanetIdResourcesRoute = PlanetIdResourcesRouteImport.update({
+  id: '/planet/$id/resources',
+  path: '/planet/$id/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/planets': typeof PlanetsRoute
+  '/planet/$id/resources': typeof PlanetIdResourcesRoute
+  '/planet/$id/': typeof PlanetIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/planets': typeof PlanetsRoute
+  '/planet/$id/resources': typeof PlanetIdResourcesRoute
+  '/planet/$id': typeof PlanetIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/planets': typeof PlanetsRoute
+  '/planet/$id/resources': typeof PlanetIdResourcesRoute
+  '/planet/$id/': typeof PlanetIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/planets' | '/planet/$id/resources' | '/planet/$id/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/planets' | '/planet/$id/resources' | '/planet/$id'
+  id: '__root__' | '/' | '/planets' | '/planet/$id/resources' | '/planet/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PlanetsRoute: typeof PlanetsRoute
+  PlanetIdResourcesRoute: typeof PlanetIdResourcesRoute
+  PlanetIdIndexRoute: typeof PlanetIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/planets': {
+      id: '/planets'
+      path: '/planets'
+      fullPath: '/planets'
+      preLoaderRoute: typeof PlanetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +85,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/planet/$id/': {
+      id: '/planet/$id/'
+      path: '/planet/$id'
+      fullPath: '/planet/$id/'
+      preLoaderRoute: typeof PlanetIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planet/$id/resources': {
+      id: '/planet/$id/resources'
+      path: '/planet/$id/resources'
+      fullPath: '/planet/$id/resources'
+      preLoaderRoute: typeof PlanetIdResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PlanetsRoute: PlanetsRoute,
+  PlanetIdResourcesRoute: PlanetIdResourcesRoute,
+  PlanetIdIndexRoute: PlanetIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
