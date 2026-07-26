@@ -156,7 +156,7 @@ function PlanetsPage() {
                       withRing={p.id === "saturn"}
                     />
                   </div>
-                  <p className="mx-auto mt-8 max-w-xl text-lg text-white/80 md:text-xl">
+                  <p className="mx-auto mt-8 w-full max-w-[85vw] text-lg text-white/80 sm:max-w-xl md:text-xl">
                     {p.summary}
                   </p>
                   {isActive && (
