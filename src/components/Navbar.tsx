@@ -44,28 +44,28 @@ export function Navbar() {
 return (
   <div
     ref={navRef}
-    className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between gap-3 px-4 py-4 md:px-8"
+    className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between gap-1 px-2 py-3 sm:gap-3 sm:px-4 sm:py-4 md:px-8"
   >
     {/* Logo - Left */}
-    <Link to="/" className="flex-shrink-0">
+    <Link to="/" className="min-w-0 flex-shrink-0">
       <img
         src="/logo.png"
         alt="Logo"
-        className="h-20 w-auto object-contain transition hover:scale-105"
+        className="h-10 w-auto object-contain transition hover:scale-105 sm:h-14 md:h-20"
       />
     </Link>
 
     {/* Search - Center */}
-    <div className="relative">
+    <div className="relative min-w-0 flex-shrink">
       <div
-        className="flex items-center gap-2 rounded-full border px-4 py-2"
+        className="flex min-w-0 items-center gap-1 rounded-full border px-2 py-1.5 sm:gap-2 sm:px-4 sm:py-2"
         style={{
           background: "rgba(255,255,255,0.08)",
           borderColor: "rgba(255,255,255,0.15)",
           backdropFilter: "blur(12px)",
         }}
       >
-        <Search size={16} className="text-white/80" />
+        <Search size={16} className="flex-shrink-0 text-white/80" />
 
         <input
           value={q}
@@ -75,8 +75,8 @@ return (
           }}
           onFocus={() => setOpen(true)}
           onBlur={() => setTimeout(() => setOpen(false), 150)}
-          placeholder="Search planets…"
-          className="w-32 bg-transparent text-sm text-white placeholder:text-white/50 focus:outline-none md:w-56"
+          placeholder="Search…"
+          className="w-14 min-w-0 bg-transparent text-sm text-white placeholder:text-white/50 focus:outline-none sm:w-32 md:w-56"
         />
       </div>
 
@@ -105,7 +105,7 @@ return (
 
     {/* Nav pill - Right */}
     <div
-      className="flex items-center gap-1 rounded-full border p-1"
+      className="flex flex-shrink-0 items-center gap-0.5 rounded-full border p-1 sm:gap-1"
       style={{
         background: "rgba(255,255,255,0.08)",
         borderColor: "rgba(255,255,255,0.15)",
@@ -114,7 +114,7 @@ return (
     >
       <Link
         to="/"
-        className="rounded-full px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-white/15"
+        className="whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-semibold text-white transition hover:bg-white/15 sm:px-4 sm:text-sm"
         activeProps={{
           style: { background: "rgba(255,255,255,0.2)" },
         }}
@@ -123,12 +123,12 @@ return (
         Home
       </Link>
 
-
       <a
         href="#contact"
-        className="rounded-full px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-white/15"
+        className="whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-semibold text-white transition hover:bg-white/15 sm:px-4 sm:text-sm"
       >
-        Contact Us
+        <span className="sm:hidden">Contact</span>
+        <span className="hidden sm:inline">Contact Us</span>
       </a>
     </div>
   </div>
