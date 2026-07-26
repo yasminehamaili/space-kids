@@ -8,7 +8,8 @@ export function Starfield() {
     if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
     let raf = 0;
-    let w = 0, h = 0;
+    let w = 0;
+    let h = 0;
     const stars: { x: number; y: number; r: number; a: number; s: number }[] = [];
 
     const resize = () => {

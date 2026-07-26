@@ -23,13 +23,13 @@ function Home() {
   };
 
   return (
-    <div className="relative flex min-h-[calc(100vh-6rem)] flex-col items-center overflow-hidden px-4">
+    <div className="relative flex flex-col items-center overflow-hidden" style={{ Height: "100px" }}>
       <div className="mt-4 text-center">
-        <h1 className="font-display text-4xl font-bold text-white drop-shadow md:text-6xl">
-          🚀 Welcome, Space Explorer!
+        <h1 className="font-display text-4xl text-white drop-shadow md:text-6xl">
+        Welcome, Space Explorer!
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-white/80 md:text-lg">
-          Click any planet to zoom in — or start the tour!
+          Click any planet to zoom in or start the tour!
         </p>
       </div>
 
@@ -40,15 +40,16 @@ function Home() {
       >
         <div className="absolute inset-0 flex items-center justify-center">
           {/* Sun */}
-          <div
-            className="sun-glow rounded-full"
-            style={{
-              width: 90,
-              height: 90,
-              background:
-                "radial-gradient(circle at 40% 40%, #fff2a8, #ffb54a 55%, #ff6a1a)",
-            }}
-          />
+        <img
+          src="/sun.png"
+          alt="The Sun"
+          className="sun-glow rounded-full"
+          style={{
+            width: 100,
+            height: 100,
+            objectFit: "cover",
+          }}
+        />
 
           {planets.map((p) => {
             const maxR = 540;
@@ -99,27 +100,22 @@ function Home() {
                       onClick={(e) => handlePlanetClick(e, p.id)}
                       title={p.name}
                     >
-                      <PlanetSphere
-                        planet={p}
-                        size={p.size}
-                        withRing={p.id === "saturn"}
-                      />
+                      <PlanetSphere planet={p} size={p.size} withRing={p.id === "saturn"} />
                     </div>
                   </div>
                 </div>
               </div>
             );
-          })}
-
+        })}
         </div>
       </div>
 
       <button
         onClick={() => navigate({ to: "/planets" })}
-        className="mt-6 rounded-full bg-primary px-8 py-4 font-display text-xl font-bold text-primary-foreground shadow-lg transition hover:scale-105 hover:shadow-2xl"
-        style={{ boxShadow: "0 10px 40px rgba(255, 170, 60, 0.5)" }}
+        className="mt-6 rounded-full border border-white/30 bg-white/10 px-10 py-5 font-display text-xl  text-white backdrop-blur-md transition hover:scale-105 hover:bg-white/20 hover:shadow-2xl"
+        
       >
-        ✨ Start Exploring
+      Start Exploring
       </button>
     </div>
   );

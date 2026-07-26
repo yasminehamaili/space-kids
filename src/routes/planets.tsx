@@ -7,7 +7,7 @@ import { PlanetSphere } from "@/components/Planet3D";
 export const Route = createFileRoute("/planets")({
   head: () => ({
     meta: [
-      { title: "Meet the Planets — Space Kids" },
+      { title: "Meet the Planets: Space Kids" },
       {
         name: "description",
         content: "Swipe through all 8 planets of the Solar System.",
@@ -31,9 +31,7 @@ function PlanetsPage() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
-            const idx = Number(
-              (entry.target as HTMLElement).dataset.index ?? 0,
-            );
+            const idx = Number((entry.target as HTMLElement).dataset.index ?? 0);
             setActiveIndex(idx);
           }
         });
@@ -84,11 +82,10 @@ function PlanetsPage() {
 
   return (
     <div className="relative">
-      <h1 className="mb-2 text-center font-display text-4xl font-bold text-white md:text-5xl">
-        🪐 Meet the Planets
+      <h1 className="mb-2 text-center font-display text-4xl font-bold text-white md:text-5xl"> Meet the Planets
       </h1>
       <p className="mb-6 text-center text-white/70">
-        Swipe or use the arrows • Tap the planet to explore!
+        Tap the planet to explore!
       </p>
 
       <div className="relative">
@@ -140,21 +137,22 @@ function PlanetsPage() {
                   <div className="text-sm uppercase tracking-[0.3em] text-white/60">
                     Planet #{p.order}
                   </div>
-                  <h2 className="mb-6 mt-2 font-display text-5xl font-bold text-white drop-shadow-lg md:text-7xl">
+                  <h2 className="mb-6 mt-2 font-display text-5xl  text-white drop-shadow-lg md:text-7xl">
                     {p.name}
                   </h2>
                   <div
                     onClick={(e) => handlePlanetClick(e, p.id, isActive)}
                     className="cursor-pointer transition-transform hover:scale-105"
                     style={{
-                      animation: isActive
-                        ? "float-bob 4s ease-in-out infinite"
-                        : "none",
+                      animation: isActive ? "float-bob 4s ease-in-out infinite" : "none",
                     }}
                   >
                     <PlanetSphere
                       planet={p}
-                      size={Math.min(320, typeof window !== "undefined" ? window.innerWidth * 0.6 : 320)}
+                      size={Math.min(
+                        320,
+                        typeof window !== "undefined" ? window.innerWidth * 0.6 : 320,
+                      )}
                       withRing={p.id === "saturn"}
                     />
                   </div>
@@ -164,7 +162,7 @@ function PlanetsPage() {
                   {isActive && (
                     <button
                       onClick={(e) => handlePlanetClick(e, p.id, true)}
-                      className="mt-6 rounded-full bg-primary px-8 py-3 font-display text-lg font-bold text-primary-foreground shadow-lg transition hover:scale-105"
+                      className="mt-6 rounded-full border border-white/30 bg-white/10 px-8 py-3 font-display text-lg  text-white shadow-lg backdrop-blur-md transition hover:scale-105 hover:bg-white/20"
                     >
                       Explore {p.name} →
                     </button>
@@ -185,8 +183,7 @@ function PlanetsPage() {
               className="h-2.5 rounded-full transition-all"
               style={{
                 width: i === activeIndex ? 28 : 10,
-                background:
-                  i === activeIndex ? p.accent : "rgba(255,255,255,0.3)",
+                background: i === activeIndex ? p.accent : "rgba(255,255,255,0.3)",
               }}
             />
           ))}

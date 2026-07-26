@@ -11,10 +11,13 @@ export const Route = createFileRoute("/planet/$id/resources")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.planet.name} Resources — Space Kids` },
-          { name: "description", content: `Learn more about ${loaderData.planet.name} with videos and articles.` },
+          { title: `${loaderData.planet.name} Resources: Space Kids` },
+          {
+            name: "description",
+            content: `Learn more about ${loaderData.planet.name} with videos and articles.`,
+          },
         ]
-      : [{ title: "Resources — Space Kids" }],
+      : [{ title: "Resources: Space Kids" }],
   }),
   component: Resources,
 });
@@ -28,7 +31,7 @@ function Resources() {
         <div>
           <div className="text-xs uppercase tracking-widest text-white/50">Resources</div>
           <h1
-            className="font-display text-4xl font-bold md:text-5xl"
+            className="font-display text-4xl md:text-5xl"
             style={{ color: planet.accent }}
           >
             All about {planet.name}
@@ -49,9 +52,7 @@ function Resources() {
       </div>
 
       <div className="glass-panel mt-6 p-6">
-        <h2 className="font-display text-2xl font-bold text-white">
-          📖 Quick summary
-        </h2>
+        <h2 className="font-display text-2xl text-white"> Quick summary</h2>
         <p className="mt-3 text-lg leading-relaxed text-white/85">
           {planet.summary} {planet.facts.funFacts.join(" ")}
         </p>
@@ -59,7 +60,7 @@ function Resources() {
           href={planet.wiki}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-4 inline-block rounded-full px-5 py-2 font-bold shadow-lg transition hover:scale-105"
+          className="mt-4 inline-block rounded-full px-5 py-2 shadow-lg transition hover:scale-105"
           style={{ background: planet.accent, color: "#1a0a2a" }}
         >
           Read more on Wikipedia ↗

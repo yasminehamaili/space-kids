@@ -11,10 +11,9 @@ export function Footer() {
     >
       <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
         <div>
-          <h3 className="mb-2 font-display text-2xl text-white">🌌 Space Kids</h3>
+          <h3 className="mb-2 font-display text-2xl text-white">Space Kids</h3>
           <p className="text-sm text-white/70">
-            A colorful playground for little astronauts learning about our
-            Solar System.
+            A colorful playground for little astronauts learning about our Solar System.
           </p>
         </div>
         <div id="about">
@@ -22,20 +21,20 @@ export function Footer() {
             About Us
           </h4>
           <p className="text-sm text-white/70">
-            We turn big space ideas into tiny, fun adventures. Made with love
-            for curious kids everywhere.
+            We turn big space ideas into tiny, fun adventures. Made with love for curious kids
+            everywhere.
           </p>
         </div>
         <div>
           <h4 className="mb-2 text-sm font-bold uppercase tracking-wider text-white/80">
             Contact Us
           </h4>
-          <p className="text-sm text-white/70">hello@spacekids.example</p>
-          <p className="text-sm text-white/70">🚀 123 Milky Way Lane</p>
+          <p className="text-sm text-white/70">yasmine.hamaili@gmail.com</p>
+          <p className="text-sm text-white/70">Yasmine Hamaili on LinkedIn</p>
         </div>
       </div>
       <p className="mt-8 text-center text-xs text-white/50">
-        © {new Date().getFullYear()} Space Kids · Reach for the stars ✨
+        © {new Date().getFullYear()} Space Kids · Reach for the stars
       </p>
     </footer>
   );

@@ -1,9 +1,21 @@
-@import "tailwindcss" source(none);
+@import "tailwindcss";
 @source "../src";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@font-face {
+  font-family: "TitleFont";
+  src: url("/fonts/gulloku.otf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 
+@font-face {
+  font-family: "BodyFont";
+  src: url("/fonts/CreatoDisplay-Regular.otf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -25,8 +37,8 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --font-display: "Fredoka", "Baloo 2", system-ui, sans-serif;
-  --font-body: "Nunito", system-ui, sans-serif;
+  --font-display: "TitleFont";
+  --font-body: "BodyFont";
 }
 
 :root {
@@ -35,7 +47,7 @@
   --foreground: oklch(0.98 0.01 250);
   --card: oklch(0.2 0.06 280);
   --card-foreground: oklch(0.98 0.01 250);
-  --primary: oklch(0.78 0.19 55); /* sunny orange */
+  --primary: oklch(83.167% 0.02273 73.997 / 0.592); /* sunny orange */
   --primary-foreground: oklch(0.15 0.03 40);
   --secondary: oklch(0.7 0.2 320); /* magenta */
   --secondary-foreground: oklch(0.98 0.01 250);
@@ -45,14 +57,11 @@
   --accent-foreground: oklch(0.15 0.03 250);
   --border: oklch(1 0 0 / 15%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.78 0.19 55);
+  --ring: oklch(84.888% 0.03655 71.325 / 0.518);
 }
 
 html, body {
-  background:
-    radial-gradient(1200px 800px at 20% 10%, rgba(120, 60, 220, 0.3), transparent 60%),
-    radial-gradient(1000px 700px at 90% 80%, rgba(220, 60, 160, 0.25), transparent 60%),
-    linear-gradient(180deg, #0a0820 0%, #05030f 100%);
+  background: url("/bg-space.png") center center / cover no-repeat fixed;
   background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-body);
@@ -78,9 +87,7 @@ html, body {
   50% { box-shadow: 0 0 120px 40px #ffdf7f, 0 0 220px 60px #ff8a2baa; }
 }
 
-.sun-glow {
-  animation: sun-pulse 4s ease-in-out infinite;
-}
+
 
 @keyframes orbit-spin {
   from { transform: rotate(0deg); }

@@ -13,10 +13,10 @@ export const Route = createFileRoute("/planet/$id/")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.planet.name} — Space Kids` },
+          { title: `${loaderData.planet.name}:  Space Kids` },
           { name: "description", content: loaderData.planet.summary },
         ]
-      : [{ title: "Planet — Space Kids" }],
+      : [{ title: "Planet: Space Kids" }],
   }),
   component: PlanetDetail,
 });
@@ -86,7 +86,7 @@ function PlanetDetail() {
             Planet #{planet.order}
           </div>
           <h1
-            className="font-display text-5xl font-bold md:text-6xl"
+            className="font-display text-5xl md:text-6xl"
             style={{ color: planet.accent }}
           >
             {planet.name}
@@ -95,14 +95,14 @@ function PlanetDetail() {
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             <Fact label="Size" value={planet.facts.diameter} />
-            <Fact label="Distance ☀️" value={planet.facts.distance} />
-            <Fact label="Moons 🌙" value={planet.facts.moons} />
-            <Fact label="Temperature 🌡️" value={planet.facts.temperature} />
+            <Fact label="Distance" value={planet.facts.distance} />
+            <Fact label="Moons" value={planet.facts.moons} />
+            <Fact label="Temperature" value={planet.facts.temperature} />
           </div>
 
           <div className="glass-panel mt-4 p-4">
-            <div className="mb-2 text-sm font-bold uppercase tracking-wider text-white/70">
-              Fun facts ✨
+            <div className="mb-2 text-sm uppercase tracking-wider text-white/70">
+              Fun facts:
             </div>
             <ul className="space-y-1 text-white/90">
               {planet.facts.funFacts.map((f: string, i: number) => (
@@ -114,14 +114,14 @@ function PlanetDetail() {
           <Link
             to="/planet/$id/resources"
             params={{ id: planet.id }}
-            className="mt-6 inline-block rounded-full px-6 py-3 font-display text-lg font-bold shadow-lg transition hover:scale-105"
+            className="mt-6 inline-block rounded-full px-6 py-3 font-display text-lg shadow-lg transition hover:scale-105"
             style={{
               background: planet.accent,
               color: "#1a0a2a",
               boxShadow: `0 10px 40px ${planet.accent}55`,
             }}
           >
-            📚 Learn more →
+            Learn more →
           </Link>
         </div>
       </div>
